@@ -1,0 +1,155 @@
+﻿<Window x:Class="Calculator.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Calculator"
+        xmlns:vm="clr-namespace:Calculator.ModelViews"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="400">
+    <Window.DataContext>
+        <vm:MainWindowViewModel/>
+    </Window.DataContext>
+    <Window.InputBindings>
+        <KeyBinding Key="NumPad1"
+                    Command="{Binding Path=Input1Command}"/>
+        <KeyBinding Key="NumPad2"
+                    Command="{Binding Path=Input2Command}"/>
+        <KeyBinding Key="NumPad3"
+                    Command="{Binding Path=Input3Command}"/>
+        <KeyBinding Key="NumPad4"
+                    Command="{Binding Path=Input4Command}"/>
+        <KeyBinding Key="NumPad5"
+                    Command="{Binding Path=Input5Command}"/>
+        <KeyBinding Key="NumPad6"
+                    Command="{Binding Path=Input6Command}"/>
+        <KeyBinding Key="NumPad7"
+                    Command="{Binding Path=Input7Command}"/>
+        <KeyBinding Key="NumPad8"
+                    Command="{Binding Path=Input8Command}"/>
+        <KeyBinding Key="NumPad9"
+                    Command="{Binding Path=Input9Command}"/>
+        <KeyBinding Key="NumPad0"
+                    Command="{Binding Path=Input0Command}"/>
+        
+        
+        <KeyBinding Key="Decimal"
+                    Command="{Binding Path=InputDoubleCommand}"/>
+        
+        
+        <KeyBinding Key="Add"
+                    Command="{Binding Path=InputPlusCommand}"/>
+        <KeyBinding Key="Subtract"
+                    Command="{Binding Path=InputMinusCommand}"/>
+        <KeyBinding Key="Multiply"
+                    Command="{Binding Path=InputMultiplyCommand}"/>
+        <KeyBinding Key="Divide"
+                    Command="{Binding Path=InputDivisionCommand}"/>
+
+        <KeyBinding Key="Enter"
+                    Command="{Binding Path=InputResultCommand}"/>
+    </Window.InputBindings>
+    <Grid Background="DarkGray">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="2"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2"/>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="1" Grid.Column="0"
+                   Grid.ColumnSpan="6"
+                   Margin="2,2,2,-3"                  
+                   BorderThickness="2,2,2,0">
+            <TextBlock x:Name="txtbl_History"
+                       FontSize="18"
+                       FontStyle="Italic"
+                       Text="{Binding Path=HistoryText}"/>
+        </Border>
+        <Border Grid.Row="2" Grid.Column="0"
+                Grid.ColumnSpan="6"
+                Margin="2"                
+                BorderThickness="2,0,2,2">
+            <TextBlock x:Name="txtbl_Active"                     
+                       Text="{Binding Path=ActiveText}"/>
+        </Border>
+        <Button x:Name="btn9"
+                Grid.Column="3" Grid.Row="3"
+                Command="{Binding Path=Input9Command}"
+                Content="9"/>
+        <Button x:Name="btn8"
+                Grid.Column="2" Grid.Row="3"
+                Command="{Binding Path=Input8Command}"
+                Content="8"/>
+        <Button x:Name="btn7"
+                Grid.Column="1" Grid.Row="3"
+                Command="{Binding Path=Input7Command}"
+                Content="7"/>
+        <Button x:Name="btn6"
+                Grid.Column="3" Grid.Row="4"
+                Command="{Binding Path=Input6Command}"
+                Content="6"/>
+        <Button x:Name="btn5"
+                Grid.Column="2" Grid.Row="4"
+                Command="{Binding Path=Input5Command}"
+                Content="5"/>
+        <Button x:Name="btn4"
+                Grid.Column="1" Grid.Row="4"
+                Command="{Binding Path=Input4Command}"
+                Content="4"/>
+        <Button x:Name="btn3"
+                Grid.Column="3" Grid.Row="5"
+                Command="{Binding Path=Input3Command}"
+                Content="3"/>
+        <Button x:Name="btn2"
+                Grid.Column="2" Grid.Row="5"
+                Command="{Binding Path=Input2Command}"
+                Content="2"/>
+        <Button x:Name="btn1"
+                Grid.Column="1" Grid.Row="5"
+                Command="{Binding Path=Input1Command}"
+                Content="1"/>
+        <Button x:Name="btn0"
+                Grid.Column="1" Grid.Row="6"
+                Command="{Binding Path=Input0Command}"
+                Content="0"/>
+        <Button x:Name="btnDouble"
+                Grid.Column="2" Grid.Row="6"
+                Command="{Binding Path=InputDoubleCommand}"
+                Content=","/>
+
+        <Button x:Name="btnDivision"
+                Grid.Column="4" Grid.Row="3"
+                Command="{Binding InputDivisionCommand}"
+                Content="/"/>
+        <Button x:Name="btnMultiply"
+                Grid.Column="4" Grid.Row="4"
+                Command="{Binding InputMultiplyCommand}"
+                Content="*"/>
+        <Button x:Name="btnMinus"
+                Grid.Column="4" Grid.Row="5"
+                Command="{Binding InputMinusCommand}"
+                Content="-"/>
+        <Button x:Name="btnPlus"
+                Grid.Column="4" Grid.Row="6"
+                Command="{Binding InputPlusCommand}"
+                Content="+"/>
+        
+        
+        <Button x:Name="btnResult"
+                Grid.Column="3" Grid.Row="6"     
+                Command="{Binding InputResultCommand}"
+                Content="="/>
+    </Grid>
+</Window>
