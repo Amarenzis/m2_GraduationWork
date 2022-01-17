@@ -608,9 +608,6 @@ namespace Calculator.ModelViews
         }
         #endregion
 
-
-
-
         #endregion
 
 

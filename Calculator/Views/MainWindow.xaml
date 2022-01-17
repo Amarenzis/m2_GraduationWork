@@ -10,6 +10,8 @@
     <Window.DataContext>
         <vm:MainWindowViewModel/>
     </Window.DataContext>
+    
+    <!--Стили настроены в отдельном словаре-->
     <!--Внесение привязок кнопок к командам-->
     <Window.InputBindings>
         <KeyBinding Key="NumPad1"
@@ -50,6 +52,7 @@
         <KeyBinding Key="Enter"
                     Command="{Binding Path=InputResultCommand}"/>
     </Window.InputBindings>
+    
     <Grid Background="DarkGray">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2"/>
