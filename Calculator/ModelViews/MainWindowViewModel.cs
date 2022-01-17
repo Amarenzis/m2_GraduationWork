@@ -18,6 +18,7 @@ namespace Calculator.ModelViews
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
         }
 
+        //Вносятся необходимые поля, некоторые из них были убраны в процессе разработки
         #region Поля
 
         private int typeOperation = 0;
@@ -37,6 +38,7 @@ namespace Calculator.ModelViews
 
         #endregion
 
+        //Создаются соответствующие автосвойства
         #region Свойства
 
         public string ActiveText
@@ -66,7 +68,7 @@ namespace Calculator.ModelViews
                 OnPropertyChanged();
             }
         }
-        
+
 
         public double ActiveDouble
         {
@@ -99,32 +101,49 @@ namespace Calculator.ModelViews
         #endregion
 
         #region Команды
+        /*Логика работы приложения такова: при нажатии кнопок 0-9 (клавиш 0-9 на NumPad) формируется текст (ActiveText). Это значение переносится в txtbl_Active.
+        Из ActiveText параллельно формируется текущее число ActiveDouble
+        При первом введении числа (без активации кнопок действия +,-,/,*,+) ActiveText и ActiveDouble попадают в значения HistoryText и HistoryDouble. HistoryText переносится в txtbl_History
+        При выдаче какой-либо команды значение сначала обрабатывается в HistoryDoubleTemprorary (в соответствии с предыдущим действием) и только после нажатия любой другой кнопки действия попадает в HistoryText и HistoryDouble.
+        Фактически при каждомм введении цифры значение HistoryDoubleTemprorary пересчитывается, однако ответ становится доступным пользователю только после введения кнопки действия.
+        Подробнее - в командах
+         */
 
         #region Команда 1
         public ICommand Input1Command { get; }
         private void OnInput1CommandExecute(object p)
         {
+            //Значение кнопки:
             numberOfButton = 1;
+            //формирование текста в txtbl_Active:
             ActiveText += numberOfButton;
+            //формирование текста в ActiveDouble - текущего значения введенного числа:
             ActiveDouble = Convert.ToDouble(ActiveText);
 
+            //Оператор switch помогает в зависимости от текущей операции создать временное значение HistoryDoubleTemprorary
             switch (typeOperation)
             {
                 case 0:
+                    //0 - стартовое значение, когда не выбрана ни одна функция. В таком виде значения Active попадают в History насколько это возможно прямо.
                     HistoryText = ActiveText;
                     HistoryDoubleTemprorary = ActiveDouble;
                     break;
                 case 1:
+                    //1 - функция сложения. Здесь к старому числу надо прибавлять постоянно изменяющееся текущее. 
                     HistoryDoubleTemprorary = HistoryDouble + ActiveDouble;
                     break;
                 case 2:
+                    //2 - функция вычитания. Логика аналогична. 
                     HistoryDoubleTemprorary = HistoryDouble - ActiveDouble;
                     break;
                 case 3:
+                    //3 - функция умножения. Логика аналогична. 
                     HistoryDoubleTemprorary = HistoryDouble * ActiveDouble;
                     break;
                 case 4:
-                    if (ActiveDouble==0)                    
+                    /*4 - функция деления. Команда действия выполняется до введения числа, поэтому каким-либо образом запретить я её не могу 
+                     Используется обходной путь - при делении на ноль происходит деление на 1, что не вызывает ошибки */
+                    if (ActiveDouble == 0)
                         HistoryDoubleTemprorary = HistoryDouble / 1;
                     else
                         HistoryDoubleTemprorary = HistoryDouble / ActiveDouble;
@@ -134,6 +153,7 @@ namespace Calculator.ModelViews
         }
         private bool CanInput1CommandExecuted(object p)
         {
+            //Ограничения у команд нет
             return true;
         }
         #endregion
@@ -475,19 +495,24 @@ namespace Calculator.ModelViews
         public ICommand InputDoubleCommand { get; }
         private void OnInputDoubleCommandExecute(object p)
         {
+            //Ввожу знак разделения целого и дробного в строку
             ActiveText += ",";
+            //Создаю временную строку с нулём в конце, т.к. текст "1," вызывает ошибку при переводе в double, в отличии от "1,0"
             ActiveTextTemprorary = ActiveText + "0";
+            // Попытка перевода текущего текста в double 
             try
             {
-                ActiveDouble = Convert.ToDouble(ActiveTextTemprorary);
+                ActiveDouble = Convert.ToDouble(ActiveText);
             }
+            // А если не получилось - берём модифицированный текст
             catch
             {
-                ActiveDouble = Convert.ToDouble(ActiveText);
+                ActiveDouble = Convert.ToDouble(ActiveTextTemprorary);
             }
         }
         private bool CanInputDoubleCommandExecuted(object p)
         {
+            //Здесь не даём поставить знак деления целой и дробной части если один уже есть
             if ((ActiveText != null) && (ActiveText.Contains(",")))
                 return false;
             else
@@ -495,19 +520,23 @@ namespace Calculator.ModelViews
         }
         #endregion
 
-        
+
         #region Команда сложения
         public ICommand InputPlusCommand { get; }
         private void OnInputPlusCommandExecute(object p)
         {
+            //Назначаем тип операции 
             typeOperation = 1;
+            //Формируем HistoryDouble для запоминания предыдущего значения (для последующих операций над ним) и HistoryText для txtbl_History (история)
             HistoryDouble = HistoryDoubleTemprorary;
             HistoryText = HistoryDouble + " + ";
+            //Очистка данных для введения второго значения операции
             ActiveDouble = 0;
-            ActiveText = null;           
+            ActiveText = null;
         }
         private bool CanInputPlusCommandExecuted(object p)
         {
+            //Команда доступна всегда
             return true;
         }
         #endregion
@@ -564,13 +593,14 @@ namespace Calculator.ModelViews
         public ICommand InputResultCommand { get; }
         private void OnInputResultCommandExecute(object p)
         {
+            // В целом всё аналогично предыдущим, только typeOperation возвращается к 0 для начала нового цикла
             typeOperation = 0;
             HistoryDouble = HistoryDoubleTemprorary;
-            HistoryText = "= " + HistoryDouble ;
+            HistoryText = "= " + HistoryDouble;
             ActiveDouble = 0;
             ActiveText = null;
             HistoryDouble = 0;
-            
+
         }
         private bool CanInputResultCommandExecuted(object p)
         {
@@ -587,6 +617,7 @@ namespace Calculator.ModelViews
 
         public MainWindowViewModel()
         {
+            //Создаю команды для назначения кнопкам и клавишам
             Input1Command = new RelayCommand(OnInput1CommandExecute, CanInput1CommandExecuted);
             Input2Command = new RelayCommand(OnInput2CommandExecute, CanInput2CommandExecuted);
             Input3Command = new RelayCommand(OnInput3CommandExecute, CanInput3CommandExecuted);
@@ -605,7 +636,7 @@ namespace Calculator.ModelViews
             InputMultiplyCommand = new RelayCommand(OnInputMultiplyCommandExecute, CanInputMultiplyCommandExecuted);
             InputDivisionCommand = new RelayCommand(OnInputDivisionCommandExecute, CanInputDivisionCommandExecuted);
 
-            InputResultCommand = new RelayCommand(OnInputResultCommandExecute, CanInputResultCommandExecuted);                    
+            InputResultCommand = new RelayCommand(OnInputResultCommandExecute, CanInputResultCommandExecuted);
 
         }
 

@@ -9,6 +9,7 @@ namespace Calculator.Models
 {
     public class RelayCommand : ICommand
     {
+        //Базовая команда
         private readonly Action<object> fExecute;
         private readonly Func<object,bool> fCanExecute;
         
